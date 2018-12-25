@@ -12,6 +12,7 @@ exports.getPosts = (req, res, next) => {
 	let totalItems;
 	Post.find({})
 		.populate("creator")
+		.sort({ createdAt: -1 })
 		.countDocuments()
 		.then(count => {
 			totalItems = count;
@@ -156,6 +157,7 @@ exports.updatePost = (req, res, next) => {
 			return post.save();
 		})
 		.then(result => {
+			io.getIO().emit("post", { action: "update", post: result });
 			res.status(200).json({
 				message: "Post updated",
 				post: result
