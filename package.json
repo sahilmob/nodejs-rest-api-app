@@ -12,5 +12,9 @@
 	"license": "ISC",
 	"devDependencies": {
 		"concurrently": "^4.1.0"
+	},
+	"dependencies": {
+		"save": "^2.3.3",
+		"socket.io": "^2.2.0"
 	}
 }
