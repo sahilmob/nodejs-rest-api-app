@@ -4,7 +4,17 @@ const fs = require("fs");
 const path = require("path");
 
 exports.getPosts = (req, res, next) => {
-	Post.find()
+	const currentPage = req.query.page || 1;
+	let perPage = 2;
+	let totalItems;
+	Post.find({})
+		.countDocuments()
+		.then(count => {
+			totalItems = count;
+			return Post.find()
+				.limit(perPage)
+				.skip(perPage * (currentPage - 1));
+		})
 		.then(posts => {
 			if (!posts) {
 				const error = new Error("Could not find posts.");
@@ -12,7 +22,8 @@ exports.getPosts = (req, res, next) => {
 				throw error;
 			}
 			res.status(200).json({
-				posts
+				posts,
+				totalItems
 			});
 		})
 		.catch(err => {
