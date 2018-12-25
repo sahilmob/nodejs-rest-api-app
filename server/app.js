@@ -5,9 +5,6 @@ const multer = require("multer");
 const uuid = require("uuid/v4");
 require("dotenv").config();
 
-const feedRoutes = require("./routes/feed");
-const authRoutes = require("./routes/auth");
-
 const app = express();
 
 const fileStorage = multer.diskStorage({
@@ -49,8 +46,6 @@ app.use((req, res, next) => {
 	res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
 	next();
 });
-app.use("/feed", feedRoutes);
-app.use("/auth", authRoutes);
 
 app.use((error, req, res, next) => {
 	console.log(error);
@@ -67,11 +62,7 @@ mongoose
 	)
 	.then(() => {
 		console.log("DB connected");
-		const server = app.listen(8080);
-		const io = require("./socket").init(server);
-		io.on("connection", socket => {
-			console.log("client connected");
-		});
+		app.listen(8080);
 	})
 	.catch(err => {
 		console.log(err);
